@@ -4,12 +4,12 @@
 
 ## Phase 1: Setup (Shared Infrastructure)
 
-- [ ] T001 [P] Create frontend Next.js project scaffold in `frontend/`
+- [ ] T001 [P] Use the existing root Next.js project scaffold for the frontend
 - [ ] T002 [P] Create backend Spring Boot project scaffold in `backend/`
 - [ ] T003 [P] Create Docker Compose configuration in `docker-compose.yml`
-- [ ] T004 Create database init scripts in `db/init/schema.sql`
+- [ ] T004 Create database init scripts in `backend/src/main/resources/db/schema.sql`
 - [ ] T005 [P] Add `.env.example` with MySQL and service settings at `.env.example`
-- [ ] T006 [P] Configure Tailwind CSS and global styles in `frontend/tailwind.config.js`, `frontend/postcss.config.js`, and `frontend/src/app/globals.css`
+- [ ] T006 [P] Configure Tailwind CSS and global styles in `tailwind.config.ts`, `postcss.config.mjs`, and `app/globals.css`
 - [ ] T007 [P] Add project README and quickstart notes in `README.md`
 
 ---
@@ -23,12 +23,12 @@
 - [ ] T012 Create REST controller skeleton in `backend/src/main/java/com/example/taskmanager/controller/TaskController.java`
 - [ ] T013 Create DTOs and validation classes in `backend/src/main/java/com/example/taskmanager/dto/TaskDto.java`
 - [ ] T014 Configure MySQL datasource and application properties in `backend/src/main/resources/application.yml`
-- [ ] T015 Create frontend API client module in `frontend/src/lib/api.ts`
-- [ ] T016 Create shared frontend types in `frontend/src/lib/types.ts`
-- [ ] T017 Create `frontend/src/components/Layout.tsx` for shared page layout
+- [ ] T015 Create frontend API client module in `lib/api.ts`
+- [ ] T016 Create shared frontend types in `lib/types.ts`
+- [ ] T017 Create `components/Layout.tsx` for shared page layout
 - [ ] T018 Create backend Dockerfile in `backend/Dockerfile`
-- [ ] T019 Create frontend Dockerfile in `frontend/Dockerfile`
-- [ ] T020 Create backend database schema and sample seed script in `db/init/schema.sql`
+- [ ] T019 Create frontend Dockerfile in `Dockerfile.frontend`
+- [ ] T020 Create backend database schema and sample seed script in `backend/src/main/resources/db/schema.sql`
 - [ ] T021 Create local Docker Compose startup docs in `specs/001-smart-task-manager/quickstart.md`
 
 ---
@@ -39,11 +39,11 @@
 
 **Independent Test**: Create a task, change its status, edit details, and delete it; verify all operations succeed via the UI and backend API.
 
-- [ ] T022 [P] [US1] Create task list page in `frontend/src/app/page.tsx`
-- [ ] T023 [P] [US1] Create task form component in `frontend/src/components/TaskForm.tsx`
-- [ ] T024 [P] [US1] Create task card component in `frontend/src/components/TaskCard.tsx`
-- [ ] T025 [US1] Add task create, update, and delete methods in `frontend/src/lib/api.ts`
-- [ ] T026 [US1] Add task CRUD flows and state management in `frontend/src/app/page.tsx`
+- [ ] T022 [P] [US1] Create task list page in `app/page.tsx`
+- [ ] T023 [P] [US1] Create task form component in `components/TaskForm.tsx`
+- [ ] T024 [P] [US1] Create task card component in `components/TaskCard.tsx`
+- [ ] T025 [US1] Add task create, update, and delete methods in `lib/api.ts`
+- [ ] T026 [US1] Add task CRUD flows and state management in `app/page.tsx`
 - [ ] T027 [US1] Add backend CRUD methods to `backend/src/main/java/com/example/taskmanager/service/TaskService.java`
 - [ ] T028 [US1] Add backend CRUD endpoints to `backend/src/main/java/com/example/taskmanager/controller/TaskController.java`
 - [ ] T029 [US1] Add request validation for task creation and updates in `backend/src/main/java/com/example/taskmanager/dto/TaskDto.java`
@@ -59,14 +59,14 @@
 
 **Independent Test**: Create tasks with all urgent/important combinations and verify they render in the correct matrix quadrants.
 
-- [ ] T033 [P] [US2] Create Eisenhower Matrix component in `frontend/src/components/EisenhowerMatrix.tsx`
-- [ ] T034 [P] [US2] Create status filter component in `frontend/src/components/StatusFilter.tsx`
-- [ ] T035 [US2] Add urgent/important toggles to `frontend/src/components/TaskForm.tsx`
-- [ ] T036 [US2] Add urgent and important badges to `frontend/src/components/TaskCard.tsx`
-- [ ] T037 [US2] Add matrix grouping and quadrant logic in `frontend/src/app/page.tsx`
+- [ ] T033 [P] [US2] Create Eisenhower Matrix component in `components/EisenhowerMatrix.tsx`
+- [ ] T034 [P] [US2] Create status filter component in `components/StatusFilter.tsx`
+- [ ] T035 [P] [US2] Add urgent/important toggles to `components/TaskForm.tsx`
+- [ ] T036 [P] [US2] Add urgent and important badges to `components/TaskCard.tsx`
+- [ ] T037 [US2] Add matrix grouping and quadrant logic in `app/page.tsx`
 - [ ] T038 [US2] Add backend support for query filtering by urgent and important in `backend/src/main/java/com/example/taskmanager/controller/TaskController.java`
-- [ ] T039 [US2] Add frontend filter controls and matrix visualization in `frontend/src/app/page.tsx`
-- [ ] T040 [US2] Update API calls to include classification fields in `frontend/src/lib/api.ts`
+- [ ] T039 [US2] Add frontend filter controls and matrix visualization in `app/page.tsx`
+- [ ] T040 [US2] Update API calls to include classification fields in `lib/api.ts`
 
 ---
 
@@ -76,12 +76,12 @@
 
 **Independent Test**: Validate the dashboard, forms, and matrix across mobile and desktop viewport sizes.
 
-- [ ] T041 [P] [US3] Add responsive layout utilities in `frontend/tailwind.config.js` and `frontend/src/app/globals.css`
-- [ ] T042 [US3] Add mobile-friendly task card layout in `frontend/src/components/TaskCard.tsx`
-- [ ] T043 [US3] Add responsive form layout in `frontend/src/components/TaskForm.tsx`
-- [ ] T044 [US3] Add responsive matrix layout in `frontend/src/components/EisenhowerMatrix.tsx`
-- [ ] T045 [US3] Add responsive grid and spacing in `frontend/src/app/page.tsx`
-- [ ] T046 [US3] Create visual breakpoint validations in `frontend/src/app/page.tsx`
+- [ ] T041 [P] [US3] Add responsive layout utilities in `tailwind.config.ts` and `app/globals.css`
+- [ ] T042 [US3] Add mobile-friendly task card layout in `components/TaskCard.tsx`
+- [ ] T043 [US3] Add responsive form layout in `components/TaskForm.tsx`
+- [ ] T044 [US3] Add responsive matrix layout in `components/EisenhowerMatrix.tsx`
+- [ ] T045 [US3] Add responsive grid and spacing in `app/page.tsx`
+- [ ] T046 [US3] Create visual breakpoint validations in `app/page.tsx`
 
 ---
 
