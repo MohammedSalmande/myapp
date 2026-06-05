@@ -1,0 +1,5 @@
+INSERT INTO tasks (title, description, urgent, important, status, due_date)
+VALUES
+  ('Plan sprint backlog', 'Define feature stories for the task manager project', true, true, 'TODO', CURDATE()),
+  ('Review wireframes', 'Review the UI layout and responsive behavior', false, true, 'IN_PROGRESS', DATE_ADD(CURDATE(), INTERVAL 3 DAY)),
+  ('Complete unit tests', 'Add service and controller tests for the backend', false, false, 'TODO', NULL);
