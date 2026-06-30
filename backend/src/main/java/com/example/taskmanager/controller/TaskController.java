@@ -5,6 +5,8 @@ import com.example.taskmanager.service.TaskService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -50,31 +52,37 @@ public class TaskController {
 
     @GetMapping
     public List<TaskDto> getAllTasks() {
-        return taskService.findAll();
+        String username = getCurrentUsername();
+        return taskService.findAllByUsername(username);
     }
 
     @GetMapping("/{id}")
     public TaskDto getTaskById(@PathVariable Long id) {
-        return taskService.findById(id);
+        return taskService.findByIdAndUsername(id, getCurrentUsername());
     }
 
     @PostMapping
     public ResponseEntity<TaskDto> createTask(@Valid @RequestBody TaskDto taskDto) {
-        // Accept a JSON task payload from the frontend and persist it.
-        TaskDto created = taskService.create(taskDto);
+        TaskDto created = taskService.create(taskDto, getCurrentUsername());
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @PutMapping("/{id}")
     public TaskDto updateTask(@PathVariable Long id, @Valid @RequestBody TaskDto taskDto) {
-        // Update the task with the matching ID using the validated request body.
-        return taskService.update(id, taskDto);
+        return taskService.update(id, taskDto, getCurrentUsername());
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteTask(@PathVariable Long id) {
-        // Delete the matching task and return no content for the response.
-        taskService.delete(id);
+        taskService.delete(id, getCurrentUsername());
+    }
+
+    private String getCurrentUsername() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || authentication.getName() == null) {
+            throw new IllegalStateException("No authenticated user found");
+        }
+        return authentication.getName();
     }
 }

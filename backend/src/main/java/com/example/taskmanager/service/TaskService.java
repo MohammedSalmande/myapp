@@ -3,6 +3,7 @@ package com.example.taskmanager.service;
 import com.example.taskmanager.dto.TaskDto;
 import com.example.taskmanager.exception.NotFoundException;
 import com.example.taskmanager.model.Task;
+import com.example.taskmanager.model.User;
 import com.example.taskmanager.repository.TaskRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,35 +16,42 @@ import java.util.stream.Collectors;
 public class TaskService {
 
     private final TaskRepository taskRepository;
+    private final UserService userService;
 
-    public TaskService(TaskRepository taskRepository) {
+    public TaskService(TaskRepository taskRepository, UserService userService) {
         this.taskRepository = taskRepository;
+        this.userService = userService;
     }
 
-    public List<TaskDto> findAll() {
-        return taskRepository.findAll().stream().map(this::toDto).collect(Collectors.toList());
+    public List<TaskDto> findAllByUsername(String username) {
+        return taskRepository.findByOwnerUsername(username).stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
     }
 
-    public TaskDto findById(Long id) {
-        return taskRepository.findById(id).map(this::toDto)
+    public TaskDto findByIdAndUsername(Long id, String username) {
+        return taskRepository.findByIdAndOwnerUsername(id, username)
+                .map(this::toDto)
                 .orElseThrow(() -> new NotFoundException("Task not found with id " + id));
     }
 
-    public TaskDto create(TaskDto dto) {
+    public TaskDto create(TaskDto dto, String username) {
+        User owner = userService.findByUsername(username);
         Task task = new Task();
+        task.setOwner(owner);
         updateEntity(task, dto);
         return toDto(taskRepository.save(task));
     }
 
-    public TaskDto update(Long id, TaskDto dto) {
-        Task task = taskRepository.findById(id)
+    public TaskDto update(Long id, TaskDto dto, String username) {
+        Task task = taskRepository.findByIdAndOwnerUsername(id, username)
                 .orElseThrow(() -> new NotFoundException("Task not found with id " + id));
         updateEntity(task, dto);
         return toDto(taskRepository.save(task));
     }
 
-    public void delete(Long id) {
-        if (!taskRepository.existsById(id)) {
+    public void delete(Long id, String username) {
+        if (!taskRepository.existsByIdAndOwnerUsername(id, username)) {
             throw new NotFoundException("Task not found with id " + id);
         }
         taskRepository.deleteById(id);

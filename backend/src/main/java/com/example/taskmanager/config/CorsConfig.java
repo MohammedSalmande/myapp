@@ -22,7 +22,7 @@ public class CorsConfig implements WebMvcConfigurer {
                 // Allow the methods used by the SPA.
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 // Accept common JSON request headers from the browser.
-                .allowedHeaders("Content-Type", "Accept")
+                .allowedHeaders("Content-Type", "Accept", "Authorization")
                 // Allow credentials if the frontend needs cookies or auth headers.
                 .allowCredentials(true)
                 // Cache preflight responses for one hour.

@@ -30,6 +30,10 @@ public class Task {
 
     private LocalDate dueDate;
 
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_id", nullable = false)
+    private User owner;
+
     @Column(nullable = false, updatable = false)
     private OffsetDateTime createdAt;
 
@@ -103,6 +107,14 @@ public class Task {
 
     public void setDueDate(LocalDate dueDate) {
         this.dueDate = dueDate;
+    }
+
+    public User getOwner() {
+        return owner;
+    }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
     }
 
     public OffsetDateTime getCreatedAt() {
