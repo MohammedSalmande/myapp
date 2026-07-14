@@ -1,12 +1,11 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import TaskForm from '../components/TaskForm';
 import TaskCard from '../components/TaskCard';
 import type {
   AuthResponse,
   LoginRequest,
-  RegisterRequest,
   TaskPayload,
   TaskResponse,
 } from '../lib/api';
@@ -20,14 +19,9 @@ import {
   updateTask,
 } from '../lib/api';
 
-const statusLabels: Record<TaskResponse['status'], string> = {
-  TODO: 'To Do',
-  IN_PROGRESS: 'In Progress',
-  DONE: 'Done',
-};
-
 const AUTH_TOKEN_KEY = 'task-manager-token';
 const AUTH_USER_KEY = 'task-manager-user';
+const GOOGLE_OAUTH_ENABLED = process.env.NEXT_PUBLIC_GOOGLE_OAUTH_ENABLED === 'true';
 
 interface AuthState {
   token: string | null;
@@ -72,7 +66,7 @@ export default function Home() {
       try {
         const results = await getTasks(token);
         setTasks(results);
-      } catch (err) {
+      } catch {
         setError('Failed to load tasks from the backend. Please log in again.');
         clearAuth();
       } finally {
@@ -83,14 +77,26 @@ export default function Home() {
   );
 
   useEffect(() => {
-    const token = localStorage.getItem(AUTH_TOKEN_KEY);
-    const username = localStorage.getItem(AUTH_USER_KEY);
-    if (token && username) {
-      setAuth({ token, username });
-      fetchTasks(token);
-    } else {
-      setLoading(false);
-    }
+    let cancelled = false;
+
+    const initializeAuth = async () => {
+      await Promise.resolve();
+      if (cancelled) return;
+
+      const token = localStorage.getItem(AUTH_TOKEN_KEY);
+      const username = localStorage.getItem(AUTH_USER_KEY);
+      if (token && username) {
+        setAuth({ token, username });
+        await fetchTasks(token);
+      } else {
+        setLoading(false);
+      }
+    };
+
+    void initializeAuth();
+    return () => {
+      cancelled = true;
+    };
   }, [fetchTasks]);
 
   const handleCreate = useCallback(
@@ -138,7 +144,7 @@ export default function Home() {
         auth.token
       );
       setTasks((current) => current.map((item) => (item.id === updated.id ? updated : item)));
-    } catch (err) {
+    } catch {
       setError('Unable to update task status. Please refresh and try again.');
     }
   };
@@ -161,7 +167,7 @@ export default function Home() {
       saveAuth(result.token, result.username);
       setMessage(`Welcome back, ${result.username}!`);
       await fetchTasks(result.token);
-    } catch (err) {
+    } catch {
       setAuthError('Unable to authenticate. Please check your credentials.');
     }
   };
@@ -178,17 +184,6 @@ export default function Home() {
     }
     clearAuth();
   };
-
-  const statusCounts = useMemo(() => {
-    return tasks.reduce(
-      (acc, task) => {
-        acc.total += 1;
-        acc[task.status] += 1;
-        return acc;
-      },
-      { total: 0, TODO: 0, IN_PROGRESS: 0, DONE: 0 } as Record<string, number>
-    );
-  }, [tasks]);
 
   const nextStatus = (status: TaskResponse['status']) => {
     if (status === 'TODO') return 'IN_PROGRESS';
@@ -359,13 +354,15 @@ export default function Home() {
                   {mode === 'login' ? 'Log in' : 'Register'}
                 </button>
 
-                <button
-                  type="button"
-                  onClick={startGoogleOAuth}
-                  className="inline-flex w-full items-center justify-center rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
-                >
-                  Continue with Google
-                </button>
+                {GOOGLE_OAUTH_ENABLED ? (
+                  <button
+                    type="button"
+                    onClick={startGoogleOAuth}
+                    className="inline-flex w-full items-center justify-center rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+                  >
+                    Continue with Google
+                  </button>
+                ) : null}
               </form>
             </section>
 

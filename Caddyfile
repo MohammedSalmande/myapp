@@ -1,0 +1,13 @@
+{$DOMAIN} {
+    encode zstd gzip
+
+    @spring path /api/* /oauth/*
+    reverse_proxy @spring backend:8080
+
+    reverse_proxy frontend:3000
+
+    log {
+        output stdout
+        format console
+    }
+}
