@@ -1,104 +1,185 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Smart Task Manager
 
-## Getting Started
+A full-stack task management application built with **Next.js**, **Spring Boot**, and **MySQL**.
 
-First, run the development server:
+![License](https://img.shields.io/badge/license-MIT-green)
+![Java](https://img.shields.io/badge/Java-21-orange)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.x-brightgreen)
+![Next.js](https://img.shields.io/badge/Next.js-15-black)
+![Docker](https://img.shields.io/badge/Docker-ready-blue)
+![GitHub Actions](https://img.shields.io/badge/CI-GitHub_Actions-success)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+## ✨ Features
+
+- User registration
+- JWT Authentication
+- Google OAuth (Work in Progress)
+- Task CRUD
+- REST API
+- Docker Compose
+- GitHub Actions CI
+- Responsive UI
+
+---
+
+## 🏗️ Architecture
+
+```text
+┌──────────────┐
+│   Browser    │
+└──────┬───────┘
+       │
+       ▼
+ Next.js Frontend
+       │ REST API
+       ▼
+ Spring Boot Backend
+       │
+       ▼
+     MySQL
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🛠 Tech Stack
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Frontend | Backend | Database | DevOps |
+|----------|----------|----------|---------|
+| Next.js | Spring Boot | MySQL | Docker |
+| React | Java 21 | JPA/Hibernate | GitHub Actions |
+| TypeScript | JWT | | Docker Compose |
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 🚀 Run locally
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Prerequisites
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Java 21
+- Node.js
+- Maven
+- Docker Desktop / Docker Engine
 
-## Deploy on Vercel
+Clone the repository
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+git clone https://github.com/MohammedSalmande/myapp.git
+cd myapp
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Start everything
 
-أهم الملفات التي يجب أن تعرفها
-الملف
-أين يستخدم؟
-وظيفته
-package.json
-JavaScript / Next.js
-يحتوي السكربتات والمكتبات
-package-lock.json
-npm
-يثبت نسخ المكتبات بدقة
-pom.xml
-Maven / Spring Boot
-يحتوي مكتبات Java وإعدادات البناء
-application.yml
-Spring Boot
-إعدادات قاعدة البيانات والسيرفر
-requirements.txt
-Python
-قائمة مكتبات Python
-Dockerfile
-Docker
-يصف كيف تُبنى صورة التطبيق
-docker-compose.yml
-Docker Compose
-يشغل عدة خدمات معًا مثل frontend/backend/db
-.gitignore
-Git
-يمنع رفع ملفات غير ضرورية
-أوامر أساسية للحفظ
-# Java
-java -version
-
-# Maven / Spring Boot
-mvn -version
-mvn spring-boot:run
-Spring Boot
-http://localhost:8080
-
-# Node / npm
-node -v
-npm -v
-npm install
-npm run dev
-http://localhost:3000
-
-# Python
-python3 --version
-pip3 --version
-python3 file.py
-
-# Docker
-docker --version
-docker ps
-sudo docker compose up --build backend db
+```bash
 docker compose up --build
-docker compose down
+```
 
-# Git
+Frontend
+
+```
+http://localhost:3000
+```
+
+Backend
+
+```
+http://localhost:8080
+```
+
+---
+
+## 📂 Project Structure
+
+```
+myapp
+│
+├── app/                 Next.js Frontend
+├── backend/             Spring Boot Backend
+├── .github/             GitHub Actions
+├── docker-compose.yml
+└── README.md
+```
+
+---
+
+## 📦 Useful Commands
+
+### Git
+
+```bash
 git status
 git add .
 git commit -m "message"
 git push
-جملة مختصرة مهمة
-npm لإدارة مكتبات JavaScript،
-Maven لإدارة مكتبات Java/Spring Boot،
-pip لإدارة مكتبات Python،
-Docker لتشغيل التطبيقات داخل Containers.
+```
+
+### Docker
+
+```bash
+docker compose up --build
+docker compose down
+docker ps
+```
+
+### Backend
+
+```bash
+cd backend
+mvn spring-boot:run
+mvn test
+```
+
+### Frontend
+
+```bash
+npm install
+npm run dev
+```
+
+---
+
+## 🔄 CI/CD
+
+Every push triggers GitHub Actions to:
+
+- Build the frontend
+- Build the backend
+- Run unit tests
+- Validate Docker configuration
+
+Deployment automation is currently under development.
+
+---
+
+## 📌 Roadmap
+
+- [x] JWT Authentication
+- [x] Docker Support
+- [x] GitHub Actions
+- [ ] Google OAuth
+- [ ] Email Verification
+- [ ] Password Reset
+- [ ] VPS Deployment
+- [ ] Automatic Deployment
+
+---
+## Project Status
+
+| Feature | Status |
+|----------|--------|
+| Frontend | ✅ Stable |
+| Backend | ✅ Stable |
+| Authentication | ✅ JWT |
+| Google OAuth | 🚧 In Progress |
+| Docker | ✅ |
+| GitHub Actions | ✅ |
+| Deployment | 🚧 Planned |
+
+## 👨‍💻 Author
+
+Mohammed Salman
+
+GitHub
+
+https://github.com/MohammedSalmande
