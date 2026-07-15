@@ -4,7 +4,7 @@ import React, { memo, useCallback, useState } from 'react';
 import { TaskPayload } from '../lib/api';
 
 interface TaskFormProps {
-  onSubmit: (task: TaskPayload) => Promise<any>;
+  onSubmit: (task: TaskPayload) => Promise<unknown>;
   initialValues?: TaskPayload;
 }
 

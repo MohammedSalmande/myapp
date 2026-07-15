@@ -1,0 +1,10 @@
+.git
+.github
+.next
+node_modules
+backend
+app/specs
+*.log
+.env*
+Dockerfile*
+compose*.yml
