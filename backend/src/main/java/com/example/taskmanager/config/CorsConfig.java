@@ -1,24 +1,32 @@
 package com.example.taskmanager.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
- * Development CORS config for the local frontend/backend setup.
+ * CORS config for the frontend/backend setup.
  *
- * This allows the Next.js app on http://localhost:3000 to call API endpoints
- * served by Spring Boot on localhost:8080. Browsers enforce same-origin policy,
- * so this configuration is necessary during development.
+ * Allows the Next.js app on http://localhost:3000 (development) and the public
+ * frontend URL plus its www. variant (production) to call the API. Browsers
+ * enforce same-origin policy, so this configuration is necessary.
  */
 @Configuration
 public class CorsConfig implements WebMvcConfigurer {
 
+    private final String frontendUrl;
+
+    public CorsConfig(@Value("${app.frontend-url}") String frontendUrl) {
+        this.frontendUrl = frontendUrl.replaceAll("/+$", "");
+    }
+
     @Override
     public void addCorsMappings(CorsRegistry registry) {
+        String wwwVariant = frontendUrl.replaceFirst("^(https?://)(?!www\\.)", "$1www.");
         registry.addMapping("/api/**")
                 // Limit CORS to API routes only.
-                .allowedOrigins("http://localhost:3000")
+                .allowedOrigins("http://localhost:3000", frontendUrl, wwwVariant)
                 // Allow the methods used by the SPA.
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 // Accept common JSON request headers from the browser.

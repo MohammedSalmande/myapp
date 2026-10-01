@@ -18,6 +18,9 @@ jwt:
   expiration-ms: ${JWT_EXPIRATION_MS:86400000}
 server:
   port: 8080
+  # Behind a reverse proxy (Traefik/Caddy) trust X-Forwarded-* so Spring sees the public
+  # https origin; otherwise same-origin browser POSTs are rejected as "Invalid CORS request".
+  forward-headers-strategy: native
 
 oauth:
   google:
