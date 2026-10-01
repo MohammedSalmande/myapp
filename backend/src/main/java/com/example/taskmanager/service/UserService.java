@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -34,9 +35,18 @@ public class UserService implements UserDetailsService {
         return userRepository.save(user);
     }
 
+    /**
+     * Returns the OAuth-only user for this verified email, creating it on first login.
+     * Refuses to hand out a password account with the same name, so nobody can pre-register
+     * someone else's email and later share that person's Google login.
+     */
     public User registerOAuthUser(String username) {
-        if (userRepository.existsByUsername(username)) {
-            return userRepository.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("User already exists"));
+        var existing = userRepository.findByUsername(username);
+        if (existing.isPresent()) {
+            if (!existing.get().isOauthOnly()) {
+                throw new IllegalStateException("A password account already uses this username");
+            }
+            return existing.get();
         }
 
         User user = new User();
@@ -56,9 +66,13 @@ public class UserService implements UserDetailsService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
 
+        // OAuth-only users have no password; Spring's User rejects null, so give them a value
+        // that is not a BCrypt hash and therefore can never match a password login.
+        String password = user.getPassword() != null ? user.getPassword() : "oauth-only-" + UUID.randomUUID();
+
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
-                user.getPassword(),
+                password,
                 Collections.emptyList()
         );
     }

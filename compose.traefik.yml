@@ -1,0 +1,28 @@
+# Override for a VPS where Traefik (e.g. Hostinger's n8n stack) already owns ports 80/443.
+# Routes ${DOMAIN} and www.${DOMAIN} through that Traefik instead of the bundled Caddy:
+#   docker compose -f compose.production.yml -f compose.traefik.yml up -d --build db backend frontend
+# Never start the `caddy` service with this file — it would fight Traefik for the ports.
+services:
+  backend:
+    networks: [default, n8n_default]
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=n8n_default
+      - traefik.http.routers.myapp-api.rule=(Host(`${DOMAIN}`) || Host(`www.${DOMAIN}`)) && (PathPrefix(`/api`) || PathPrefix(`/oauth`))
+      - traefik.http.routers.myapp-api.priority=100
+      - traefik.http.routers.myapp-api.entrypoints=websecure
+      - traefik.http.routers.myapp-api.tls.certresolver=mytlschallenge
+      - traefik.http.services.myapp-api.loadbalancer.server.port=8080
+  frontend:
+    networks: [default, n8n_default]
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=n8n_default
+      - traefik.http.routers.myapp.rule=Host(`${DOMAIN}`) || Host(`www.${DOMAIN}`)
+      - traefik.http.routers.myapp.entrypoints=websecure
+      - traefik.http.routers.myapp.tls.certresolver=mytlschallenge
+      - traefik.http.services.myapp.loadbalancer.server.port=3000
+
+networks:
+  n8n_default:
+    external: true

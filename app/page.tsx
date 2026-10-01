@@ -83,6 +83,25 @@ export default function Home() {
       await Promise.resolve();
       if (cancelled) return;
 
+      // The backend's Google callback redirects back here with the result in the URL fragment.
+      const oauthResult = new URLSearchParams(window.location.hash.slice(1));
+      if (oauthResult.has('oauth_token') || oauthResult.has('oauth_error')) {
+        window.history.replaceState(null, '', window.location.pathname + window.location.search);
+        const oauthToken = oauthResult.get('oauth_token');
+        const oauthUser = oauthResult.get('oauth_user');
+        if (oauthToken && oauthUser) {
+          saveAuth(oauthToken, oauthUser);
+          setMessage(`Welcome, ${oauthUser}!`);
+          await fetchTasks(oauthToken);
+          return;
+        }
+        setAuthError(
+          oauthResult.get('oauth_error') === 'account_conflict'
+            ? 'This email is already registered with a password. Please log in with your password.'
+            : 'Google sign-in failed. Please try again.'
+        );
+      }
+
       const token = localStorage.getItem(AUTH_TOKEN_KEY);
       const username = localStorage.getItem(AUTH_USER_KEY);
       if (token && username) {
@@ -97,7 +116,7 @@ export default function Home() {
     return () => {
       cancelled = true;
     };
-  }, [fetchTasks]);
+  }, [fetchTasks, saveAuth]);
 
   const handleCreate = useCallback(
     async (task: TaskPayload) => {

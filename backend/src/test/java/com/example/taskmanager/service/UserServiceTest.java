@@ -49,4 +49,24 @@ class UserServiceTest {
         verify(userRepository).save(userCaptor.capture());
         assertEquals("alice@example.com", userCaptor.getValue().getUsername());
     }
+
+    @Test
+    void registerOAuthUserReturnsExistingOauthUser() {
+        User existing = new User();
+        existing.setUsername("alice@example.com");
+        existing.setOauthOnly(true);
+        when(userRepository.findByUsername("alice@example.com")).thenReturn(Optional.of(existing));
+
+        assertSame(existing, userService.registerOAuthUser("alice@example.com"));
+    }
+
+    @Test
+    void registerOAuthUserRefusesPasswordAccountWithSameUsername() {
+        User passwordUser = new User();
+        passwordUser.setUsername("alice@example.com");
+        passwordUser.setPassword("$2a$10$hash");
+        when(userRepository.findByUsername("alice@example.com")).thenReturn(Optional.of(passwordUser));
+
+        assertThrows(IllegalStateException.class, () -> userService.registerOAuthUser("alice@example.com"));
+    }
 }

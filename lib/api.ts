@@ -83,7 +83,7 @@ export const logout = async (token?: string): Promise<void> => {
 };
 
 export const startGoogleOAuth = () => {
-  window.location.href = `${BASE_URL.replace('/api', '')}/auth/google`;
+  window.location.href = `${BASE_URL.replace(/\/api\/?$/, '')}/oauth/google`;
 };
 
 export const getTasks = async (token: string): Promise<TaskResponse[]> => {
