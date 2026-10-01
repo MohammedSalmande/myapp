@@ -1,16 +1,22 @@
 @import "tailwindcss";
 
-/* Brand palette: black & white base, yellow for energy, red for urgency. */
+/*
+ * Soft UI Evolution: one soft surface colour, depth from paired light/dark
+ * shadows instead of borders. Yellow = energy, red = urgency, ink = text.
+ */
 :root {
-  --ink: #0a0a0a;
+  --ink: #1e2533;
   --paper: #ffffff;
-  --canvas: #f7f6f2;
-  --line: #e7e5df;
-  --muted: #5c5c5c;
+  --canvas: #f0f4f8;
+  --line: #d1d9e6;
+  --muted: #5b6577;
   --sun: #ffd60a;
-  --sun-soft: #fff6c7;
-  --flame: #d90429;
-  --flame-soft: #ffe3e6;
+  --sun-soft: #fff4bf;
+  --flame: #e5383b;
+  --flame-deep: #c1121f;
+  --flame-soft: #ffe1e2;
+  --glow: #ffffff;
+  --shade: #d1d9e6;
 }
 
 @theme inline {
@@ -22,10 +28,21 @@
   --color-sun: var(--sun);
   --color-sun-soft: var(--sun-soft);
   --color-flame: var(--flame);
+  --color-flame-deep: var(--flame-deep);
   --color-flame-soft: var(--flame-soft);
   --font-sans: var(--font-jakarta);
-  --shadow-pop: 4px 4px 0 0 var(--ink);
-  --shadow-pop-sm: 2px 2px 0 0 var(--ink);
+
+  /* Raised surfaces, largest to smallest */
+  --shadow-soft-lg: -8px -8px 20px 0 var(--glow), 8px 8px 20px 0 var(--shade);
+  --shadow-soft: -6px -6px 15px 0 var(--glow), 6px 6px 15px 0 var(--shade);
+  --shadow-soft-sm: -4px -4px 10px 0 var(--glow), 4px 4px 10px 0 var(--shade);
+  --shadow-soft-xs: -3px -3px 8px 0 var(--glow), 3px 3px 8px 0 var(--shade);
+  /* Pressed / recessed surfaces (inputs, wells, active toggles) */
+  --shadow-inset: inset -4px -4px 10px 0 var(--glow), inset 4px 4px 10px 0 var(--shade);
+  --shadow-inset-sm: inset -2px -2px 5px 0 var(--glow), inset 2px 2px 5px 0 var(--shade);
+  /* Coloured buttons keep the light source but tint the shadow */
+  --shadow-sun: -4px -4px 10px 0 var(--glow), 4px 4px 12px 0 rgb(214 170 0 / 0.45);
+  --shadow-flame: -4px -4px 10px 0 var(--glow), 4px 4px 12px 0 rgb(193 18 31 / 0.35);
 }
 
 html {
@@ -39,9 +56,11 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Soft UI has no borders, so focus must be unmistakable. */
 :focus-visible {
-  outline: 3px solid var(--ink);
-  outline-offset: 2px;
+  outline: 3px solid var(--sun);
+  outline-offset: 3px;
+  border-radius: 12px;
 }
 
 ::selection {

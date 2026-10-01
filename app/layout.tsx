@@ -23,7 +23,7 @@ export default function RootLayout({
     <html lang="en" className={`${jakarta.variable} h-full`}>
       <body className="flex min-h-full flex-col">
         {children}
-        <footer className="mt-auto border-t border-line bg-paper">
+        <footer className="mt-auto">
           <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-4 py-5 text-sm text-muted sm:flex-row sm:px-6 lg:px-8">
             <p>© {new Date().getFullYear()} Smart Task Manager</p>
             <Link href="/privacy" className="font-medium hover:text-ink hover:underline">
