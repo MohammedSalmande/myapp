@@ -54,7 +54,8 @@ jobs:
         run: docker build -t smart-task-manager-backend:ci backend
 
   deploy:
-    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    # Opt-in: set the repository variable DEPLOY_ENABLED=true once the VPS_* secrets exist.
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && vars.DEPLOY_ENABLED == 'true'
     runs-on: ubuntu-latest
     needs: containers
     environment: production
@@ -75,4 +76,4 @@ jobs:
           VPS_DEPLOY_PATH: ${{ secrets.VPS_DEPLOY_PATH }}
         run: |
           ssh -i ~/.ssh/deploy_key "$VPS_USER@$VPS_HOST" \
-            "cd '$VPS_DEPLOY_PATH' && git pull --ff-only origin main && docker compose --env-file .env.production -f compose.production.yml up -d --build --remove-orphans"
+            "cd '$VPS_DEPLOY_PATH' && git pull --ff-only origin main && docker compose -f compose.production.yml -f compose.traefik.yml up -d --build db backend frontend"
