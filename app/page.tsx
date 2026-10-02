@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import TaskForm, { softFieldClass } from '../components/TaskForm';
+import { InstallAppButton } from '../components/Pwa';
 import TaskCard, { QUADRANT_ACCENT, quadrantOf, type Quadrant } from '../components/TaskCard';
 import {
   AlertIcon,
@@ -150,9 +151,15 @@ export default function Home() {
       try {
         const results = await getTasks(token);
         setTasks(results);
-      } catch {
-        setError('Failed to load tasks from the backend. Please log in again.');
-        clearAuth();
+      } catch (err) {
+        // fetch() rejects with a TypeError when the network is down; keep the
+        // session then, and only sign out when the server rejects the token.
+        if (err instanceof TypeError || !navigator.onLine) {
+          setError("You're offline. Your tasks will load again once you're back online.");
+        } else {
+          setError('Your session has expired. Please log in again.');
+          clearAuth();
+        }
       } finally {
         setLoading(false);
       }
@@ -201,6 +208,15 @@ export default function Home() {
       cancelled = true;
     };
   }, [fetchTasks, saveAuth]);
+
+  // Reload tasks automatically when the connection comes back.
+  useEffect(() => {
+    if (!auth.token) return;
+    const token = auth.token;
+    const onOnline = () => void fetchTasks(token);
+    window.addEventListener('online', onOnline);
+    return () => window.removeEventListener('online', onOnline);
+  }, [auth.token, fetchTasks]);
 
   const handleCreate = useCallback(
     async (task: TaskPayload) => {
@@ -361,6 +377,7 @@ export default function Home() {
               <span className="hidden truncate rounded-full px-4 py-2 text-sm font-medium text-muted shadow-inset-sm sm:block">
                 {auth.username}
               </span>
+              <InstallAppButton />
               <button
                 type="button"
                 onClick={handleLogout}
@@ -591,6 +608,8 @@ export default function Home() {
             </li>
           ))}
         </ul>
+
+        <InstallAppButton className="mt-8" />
       </section>
 
       {/* Auth */}
