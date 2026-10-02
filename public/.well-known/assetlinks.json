@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "tech.mohammedsalman.smarttask",
+      "sha256_cert_fingerprints": [
+        "C1:99:5B:9A:D6:A7:9A:0A:76:72:2C:5F:DD:9B:26:92:CF:66:DD:D7:0E:94:11:C8:81:38:53:8E:71:9F:CC:91"
+      ]
+    }
+  }
+]
